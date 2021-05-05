@@ -1,0 +1,7 @@
+apiVersion: crd.bartam/v1
+kind: WebInstall
+metadata:
+  name: webinstall-sample
+spec:
+  # Add fields here
+  foo: bar

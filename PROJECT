@@ -1,0 +1,7 @@
+domain: bartam
+repo: github.com/bartam1/kubopwebdep
+resources:
+- group: crd
+  kind: WebInstall
+  version: v1
+version: "2"

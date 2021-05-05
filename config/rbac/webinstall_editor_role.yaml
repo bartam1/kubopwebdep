@@ -1,0 +1,24 @@
+# permissions for end users to edit webinstalls.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: webinstall-editor-role
+rules:
+- apiGroups:
+  - crd.bartam
+  resources:
+  - webinstalls
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - crd.bartam
+  resources:
+  - webinstalls/status
+  verbs:
+  - get
