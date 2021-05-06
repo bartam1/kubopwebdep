@@ -28,6 +28,7 @@ import (
 
 	crdv1 "github.com/bartam1/kubopwebdep/api/v1"
 	"github.com/bartam1/kubopwebdep/controllers"
+	"github.com/sirupsen/logrus"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -68,7 +69,8 @@ func main() {
 
 	if err = (&controllers.WebInstallReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("controllers").WithName("WebInstall"),
+		Log:    logrus.WithFields(logrus.Fields{"controllers": "WebInstall"}),
+		// ctrl.Log.WithName("controllers").WithName("WebInstall"),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "WebInstall")
