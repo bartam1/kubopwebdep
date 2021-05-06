@@ -33,7 +33,7 @@ type WebInstallSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	Replicas string `json:"replicas,omitempty"`
+	Replicas int32  `json:"replicas,omitempty"`
 	Host     string `json:"host,omitempty"`
 	Image    string `json:"image,omitempty"`
 }
