@@ -39,7 +39,8 @@ spec:
             image:
               type: string
             replicas:
-              type: string
+              format: int32
+              type: integer
           type: object
         status:
           description: WebInstallStatus defines the observed state of WebInstall
