@@ -48,10 +48,20 @@ func buildIngressNginx(webInstall *v1.WebInstall) *net.Ingress {
 			Name:      webInstall.Name,
 			Namespace: webInstall.Namespace,
 			Annotations: map[string]string{
-				"kubernetes.io/ingress.class": "nginx",
+				"kubernetes.io/ingress.class":    "nginx",
+				"cert-manager.io/cluster-issuer": "letsencrypt-prod",
 			},
 		},
 		Spec: net.IngressSpec{
+			TLS: []net.IngressTLS{
+				net.IngressTLS{
+					Hosts: []string{
+						webInstall.Spec.Host,
+					},
+					SecretName: webInstall.Spec.Host + "-webinst-secret",
+				},
+			},
+
 			Rules: []net.IngressRule{
 				net.IngressRule{
 					Host: webInstall.Spec.Host,
