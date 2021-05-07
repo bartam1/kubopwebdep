@@ -45,79 +45,78 @@ type WebInstallReconciler struct {
 // +kubebuilder:rbac:groups=crd.bartam,resources=webinstalls/status,verbs=get;update;patch
 
 func (r *WebInstallReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
-	logrus.SetLevel(logrus.InfoLevel)
 	ctx := context.Background()
 
-	//r.Log = logrusr.NewLogger(logrus.New())
-	//logger := r.Log.WithValues("name", req.Name)
-	logger := logrus.WithFields(logrus.Fields{
+	r.Log = logrus.WithFields(logrus.Fields{
 		"name": req.Name,
 	})
+
 	webInstall := &v1.WebInstall{}
 	err := r.Get(ctx, req.NamespacedName, webInstall)
 
 	if err != nil {
 		if apierrors.IsNotFound(err) {
 			// Request object not found, could have been deleted after reconcile request - return and don't requeue:
-			logger.Warn("request object, deployment, service, ingress has been removed")
+			r.Log.Warn("request object, deployment, service, ingress has been removed")
 			return reconcile.Result{}, nil
 		}
 		// Error reading the object - requeue the request:
 		return reconcile.Result{}, err
 	}
 	//Set new logging fields
-	logger = logrus.WithFields(logrus.Fields{
+	r.Log = logrus.WithFields(logrus.Fields{
 		"0_Name":     req.Name,
 		"1_Replicas": webInstall.Spec.Replicas,
 		"2_Host":     webInstall.Spec.Host,
 		"3_Image":    webInstall.Spec.Image,
 	})
 
-	logger.Debug("checking if an Deployment exists for this resource")
-
+	r.Log.Debug("checking if an Deployment exists for this resource")
+	webInstallStatus := v1.PhasePending
 	deployment := &apps.Deployment{}
-	err = r.Client.Get(ctx, client.ObjectKey{Namespace: webInstall.Namespace, Name: webInstall.Name}, deployment)
+	err = r.Get(ctx, client.ObjectKey{Namespace: webInstall.Namespace, Name: webInstall.Name}, deployment)
 
 	if err != nil && apierrors.IsNotFound(err) {
-		webInstall.Status.Phase = v1.PhasePending
-		logger.Debug("could not found existing Deployment for this RO")
+		webInstallStatus = v1.PhasePending
+		r.Log.Debug("could not found existing Deployment for this RO")
 	} else if err != nil {
 
-		logger.Error(err, "failed to get Deployment for that RO")
+		r.Log.Error(err, "failed to get Deployment for that RO")
 		return ctrl.Result{}, err
 	} else {
-		webInstall.Status.Phase = v1.PhaseRunning
-		logger.Debug("existing Deployment resource already exists for that RO")
+		webInstallStatus = v1.PhaseRunning
+		r.Log.Debug("existing Deployment resource already exists for that RO")
 	}
 
-	switch webInstall.Status.Phase {
+	switch webInstallStatus {
 	case v1.PhasePending:
-		logger.Info("CREATING WEBINSTALL")
-		if err := r.createWebInstallBundle(ctx, webInstall, logger); err != nil {
+		r.Log.Info("CREATING WEBINSTALL")
+		if err := r.createWebInstallBundle(ctx, webInstall); err != nil {
 			return ctrl.Result{}, err
 		}
-		logger.Info("WEBINSTALL SUCESSFULLY CREATED")
+		r.Log.Info("CREATING OK")
 	case v1.PhaseRunning:
-		logger.Info("CHECKING INVARIANT")
-		if err = r.updateDeploymentImage(ctx, deployment, webInstall, logger); err != nil {
+		r.Log.Info("CHECKING INVARIANT")
+		if err = r.updateDeploymentImage(ctx, deployment, webInstall); err != nil {
 			return ctrl.Result{}, err
 		}
-		if err = r.updateReplicas(ctx, deployment, webInstall, logger); err != nil {
+		if err = r.updateReplicas(ctx, deployment, webInstall); err != nil {
 			return ctrl.Result{}, err
 		}
-		if err := r.updateService(ctx, webInstall, logger); err != nil {
+		if err := r.updateService(ctx, webInstall); err != nil {
 			return ctrl.Result{}, err
 		}
-		if err = r.updateIngress(ctx, webInstall, logger); err != nil {
+		if err = r.updateIngress(ctx, webInstall); err != nil {
 			return ctrl.Result{}, err
 		}
 
-		logger.Info("INVARIANT OK")
+		r.Log.Info("CHECKING OK")
 	}
 	return ctrl.Result{}, nil
 }
 
 func (r *WebInstallReconciler) SetupWithManager(mgr ctrl.Manager) error {
+
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&v1.WebInstall{}).
 		Owns(&apps.Deployment{}).
