@@ -1,4 +1,8 @@
-
+deployment.yaml
+webinstall.yaml
+webinstall01.yaml
+webinstall2.yaml
+webinstall3.yaml
 # Binaries for programs and plugins
 *.exe
 *.exe~

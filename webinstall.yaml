@@ -1,8 +1,0 @@
-apiVersion: crd.bartam/v1
-kind: WebInstall
-metadata:
-  name: ngnix-install
-spec:
-  replicas: "5"
-  host: "localhost"
-  image: "ngnix"
