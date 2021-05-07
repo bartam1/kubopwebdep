@@ -52,6 +52,15 @@ func main() {
 		"Enable leader election for controller manager. "+
 			"Enabling this will ensure there is only one active controller manager.")
 	flag.Parse()
+	//zap.New(zap.UseDevMode(true))
+
+	//Set logger level, format
+	logrus.SetLevel(logrus.InfoLevel)
+	logrus.SetFormatter(&logrus.TextFormatter{
+		DisableColors:   false,
+		TimestampFormat: "2006-01-02 15:04:05",
+		FullTimestamp:   true,
+	})
 
 	ctrl.SetLogger(zap.New(zap.UseDevMode(true)))
 
@@ -69,7 +78,7 @@ func main() {
 
 	if err = (&controllers.WebInstallReconciler{
 		Client: mgr.GetClient(),
-		Log:    logrus.WithFields(logrus.Fields{"controllers": "WebInstall"}),
+		Log:    nil,
 		// ctrl.Log.WithName("controllers").WithName("WebInstall"),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
