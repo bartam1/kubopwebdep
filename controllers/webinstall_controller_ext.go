@@ -53,6 +53,9 @@ func (r *WebInstallReconciler) updateDeploymentImage(ctx context.Context, deploy
 	if deployment.Spec.Template.Spec.Containers[0].Image != webInstall.Spec.Image {
 		r.Log.WithField("old_image", deployment.Spec.Template.Spec.Containers[0].Image).Warn("new image detected --> changing")
 		deployment = buildDeployment(webInstall)
+		if err := controllerutil.SetControllerReference(webInstall, deployment, r.Scheme); err != nil {
+			return err
+		}
 		if err := r.Update(ctx, deployment); err != nil {
 			return err
 		}
@@ -104,6 +107,9 @@ func (r *WebInstallReconciler) updateIngress(ctx context.Context, webInstall *v1
 
 		r.Log.WithField("old_host", ingress.Spec.Rules[0].Host).Warn("ingress-nginx host has been changed --> updating")
 		ingress = buildIngressNginx(webInstall)
+		if err := controllerutil.SetControllerReference(webInstall, ingress, r.Scheme); err != nil {
+			return err
+		}
 		if err := r.Update(ctx, ingress); err != nil {
 			return err
 		}
