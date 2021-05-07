@@ -6,13 +6,18 @@ on:
       - 'master'
 
 jobs:
-  push_to_registry:
-    name: Push Docker image to Docker Hub
+  test_build_push:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
-      
+
+      - name: Build
+        run: make manager
+
+      - name: Test
+        run: make test
+        
       - name: Push to Docker Hub
         uses: docker/build-push-action@v2
         with:

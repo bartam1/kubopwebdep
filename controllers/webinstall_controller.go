@@ -35,7 +35,7 @@ import (
 
 // WebInstallReconciler reconciles a WebInstall object
 type WebInstallReconciler struct {
-	client.Client
+	client.Clien
 	Log      *logrus.Entry
 	Scheme   *runtime.Scheme
 	Recorder record.EventRecorder
