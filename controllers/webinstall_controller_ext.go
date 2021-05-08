@@ -92,13 +92,20 @@ func (r *WebInstallReconciler) updateIngress(ctx context.Context, webInstall *v1
 			return err
 		}
 		if err = r.Create(ctx, ingress); err != nil {
-			r.Log.Error(err, "failed to create ingress resource")
-			return err
+			/** Sometimes happens that when we already checked resource existance and its not
+			 * but exist when we create it...
+			 * Cause is probably the creation time of the k8s
+			 */
+			if !apierrors.IsAlreadyExists(err) {
+				r.Log.Error(err, " failed to create ingress resource")
+				return err
+			}
+			r.Log.Warn(err)
 		}
 	} else if err != nil {
 		return err
 	}
-	//Checking new Host updte...
+	//Checking new Host updte
 	if len(ingress.Spec.Rules) == 0 {
 		logrus.Warn("there is no rule for host in ingress resource")
 		return nil
