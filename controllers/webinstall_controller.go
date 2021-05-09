@@ -43,6 +43,9 @@ type WebInstallReconciler struct {
 
 // +kubebuilder:rbac:groups=crd.bartam,resources=webinstalls,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=crd.bartam,resources=webinstalls/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;create;update;delete
+// +kubebuilder:rbac:groups=networking.k8s.io,resources=ingresses,verbs=get;list;watch;create;update;delete
+// +kubebuilder:rbac:groups=core,resources=services,verbs=get;list;watch;create;update;delete
 
 func (r *WebInstallReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
