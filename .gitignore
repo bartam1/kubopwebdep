@@ -1,8 +1,12 @@
 deployment.yaml
 webinstall.yaml
+webinstall1.yaml
 webinstall01.yaml
 webinstall2.yaml
 webinstall3.yaml
+zobor_install.yaml
+config/manager/kustomization.yaml
+kubopwebdep
 # Binaries for programs and plugins
 *.exe
 *.exe~
