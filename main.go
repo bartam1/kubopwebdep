@@ -18,7 +18,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"os"
 
 	"k8s.io/apimachinery/pkg/runtime"
@@ -50,12 +49,6 @@ func init() {
 }
 
 func main() {
-	version := flag.Bool("v", false, "prints current version")
-	flag.Parse()
-	if *version {
-		fmt.Println(appVer)
-		os.Exit(0)
-	}
 
 	var metricsAddr string
 	var enableLeaderElection bool
