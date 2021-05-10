@@ -16,7 +16,16 @@ jobs:
 
       - name: Test
         run: echo "no test"
-      
+
+      - name: Make release  
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.TOKEN_G }}"
+          automatic_release_tag: ${{ github.ref }}
+          prerelease: false
+          files: |
+            kubopwebdep.yml
+
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
