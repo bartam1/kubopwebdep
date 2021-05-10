@@ -17,6 +17,11 @@ jobs:
       - name: Test
         run: echo "no test"
 
+      - name: Make kubernetes install file
+        run: make kubinstall-yml
+        env:
+          IMG: bartam1/kubopwebdep:latest
+
       - name: Make release  
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -24,7 +29,7 @@ jobs:
           automatic_release_tag: ${{ github.ref }}
           prerelease: false
           files: |
-            kubopwebdep.yml
+            /tmp/kubopwebdep.yml
 
       - name: Login to DockerHub
         uses: docker/login-action@v1

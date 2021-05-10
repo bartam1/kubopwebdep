@@ -41,7 +41,7 @@ deploy: manifests
 # Create kubernetes install file
 kubinstall-yml:
 	cd config/manager && kustomize edit set image controller=${IMG}
-	kustomize build config/default > kubopwebdep.yml
+	kustomize build config/default > /tmp/kubopwebdep.yml
 
 # Generate manifests e.g. CRD, RBAC etc.
 manifests: controller-gen
