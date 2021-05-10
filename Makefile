@@ -39,7 +39,7 @@ deploy: manifests
 	kustomize build config/default | kubectl apply -f -
 	
 # Create kubernetes install file
-kubinstall-yml:
+kubinstall-yml: manifests
 	cd config/manager && kustomize edit set image controller=${IMG}
 	kustomize build config/default > /tmp/kubopwebdep.yml
 
