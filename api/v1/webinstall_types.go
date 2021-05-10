@@ -25,7 +25,6 @@ import (
 const (
 	PhasePending  = "PENDING"
 	PhaseRunning  = "RUNNING"
-	PhaseDone     = "DONE"
 	ContainerPort = 80
 	HostPort      = 80
 )
