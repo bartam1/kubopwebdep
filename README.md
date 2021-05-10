@@ -52,7 +52,7 @@ spec:
 ```
 7. Install kubopwebdep into kubernetes
 ```bash
-kubectl apply -f https://github.com/bartam1/kubopwebdep/releases/download/v1.0/kubopwebdep.yml
+kubectl apply -f https://github.com/bartam1/kubopwebdep/releases/download/refs%2Fheads%2Fmaster/kubopwebdep.yml
 ```
 
 8. Add kubopwebdep resource object with your preferences
