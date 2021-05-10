@@ -18,6 +18,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 
 	"k8s.io/apimachinery/pkg/runtime"
@@ -37,6 +38,10 @@ var (
 	setupLog = ctrl.Log.WithName("setup")
 )
 
+const (
+	appVer = "v1.01"
+)
+
 func init() {
 	_ = clientgoscheme.AddToScheme(scheme)
 
@@ -45,6 +50,13 @@ func init() {
 }
 
 func main() {
+	version := flag.Bool("v", false, "prints current version")
+	flag.Parse()
+	if *version {
+		fmt.Println(appVer)
+		os.Exit(0)
+	}
+
 	var metricsAddr string
 	var enableLeaderElection bool
 	flag.StringVar(&metricsAddr, "metrics-addr", ":8080", "The address the metric endpoint binds to.")
